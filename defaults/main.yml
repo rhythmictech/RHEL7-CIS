@@ -25,19 +25,21 @@ rhel7cis_rule_1_1_1_5: true
 rhel7cis_rule_1_1_1_6: true
 rhel7cis_rule_1_1_1_7: true
 rhel7cis_rule_1_1_1_8: true
-rhel7cis_rule_1_1_2: true
-rhel7cis_rule_1_1_3: true
-rhel7cis_rule_1_1_4: true
-rhel7cis_rule_1_1_5: true
-rhel7cis_rule_1_1_6: true
-rhel7cis_rule_1_1_7: true
-rhel7cis_rule_1_1_8: true
-rhel7cis_rule_1_1_9: true
-rhel7cis_rule_1_1_10: true
-rhel7cis_rule_1_1_11: true
-rhel7cis_rule_1_1_12: true
-rhel7cis_rule_1_1_13: true
-rhel7cis_rule_1_1_14: true
+# Do not require separate file systems for things
+rhel7cis_rule_1_1_2: false
+rhel7cis_rule_1_1_3: false
+rhel7cis_rule_1_1_4: false
+rhel7cis_rule_1_1_5: false
+rhel7cis_rule_1_1_6: false
+rhel7cis_rule_1_1_7: false
+rhel7cis_rule_1_1_8: false
+rhel7cis_rule_1_1_9: false
+rhel7cis_rule_1_1_10: false
+rhel7cis_rule_1_1_11: false
+rhel7cis_rule_1_1_12: false
+rhel7cis_rule_1_1_13: false
+rhel7cis_rule_1_1_14: false
+# End of allowing single fs
 rhel7cis_rule_1_1_15: true
 rhel7cis_rule_1_1_16: true
 rhel7cis_rule_1_1_17: true
@@ -73,7 +75,8 @@ rhel7cis_rule_1_7_1_4: true
 rhel7cis_rule_1_7_1_5: true
 rhel7cis_rule_1_7_1_6: true
 rhel7cis_rule_1_7_2: true
-rhel7cis_rule_1_8: true
+# Don't install patches in this role..
+rhel7cis_rule_1_8: false
 
 # Section 2 rules
 rhel7cis_rule_2_1_1: true
@@ -127,19 +130,26 @@ rhel7cis_rule_3_3_1: true
 rhel7cis_rule_3_3_2: true
 rhel7cis_rule_3_3_3: true
 rhel7cis_rule_3_4_1: true
-rhel7cis_rule_3_4_2: true
-rhel7cis_rule_3_4_3: true
+# No good really comes from modifying hosts.allow and hosts.deny
+# 99.999% of the time in this day and age. But bad can come, so
+# ignore this archaic CIS recommendation.
+rhel7cis_rule_3_4_2: false
+rhel7cis_rule_3_4_3: false
+# End of ignoring stupid CIS recommendations.
 rhel7cis_rule_3_4_4: true
 rhel7cis_rule_3_4_5: true
 rhel7cis_rule_3_5_1: true
 rhel7cis_rule_3_5_2: true
 rhel7cis_rule_3_5_3: true
 rhel7cis_rule_3_5_4: true
-rhel7cis_rule_3_6_1: true
-rhel7cis_rule_3_6_2: true
+# This is not where iptables/firewalld decisions should be made
+rhel7cis_rule_3_6_1: false
+rhel7cis_rule_3_6_2: false
+# End of ignoring iptables/firewalld
 rhel7cis_rule_3_6_3: true
 rhel7cis_rule_3_6_4: true
-rhel7cis_rule_3_6_5: true
+# Same as above, don't mess with firewalld
+rhel7cis_rule_3_6_5: false
 
 # Section 4 rules
 rhel7cis_rule_4_1_1_1: true
@@ -183,7 +193,9 @@ rhel7cis_rule_5_1_4: true
 rhel7cis_rule_5_1_5: true
 rhel7cis_rule_5_1_6: true
 rhel7cis_rule_5_1_7: true
-rhel7cis_rule_5_1_8: true
+# Let users set crons, in a modern server environment this is almost always
+# desired.
+rhel7cis_rule_5_1_8: false
 rhel7cis_rule_5_2_1: true
 rhel7cis_rule_5_2_2: true
 rhel7cis_rule_5_2_3: true
@@ -198,19 +210,35 @@ rhel7cis_rule_5_2_11: true
 rhel7cis_rule_5_2_12: true
 rhel7cis_rule_5_2_13: true
 rhel7cis_rule_5_2_14: true
-rhel7cis_rule_5_2_15: true
-rhel7cis_rule_5_2_16: true
+# No good reason to restrict inbound ssh access
+rhel7cis_rule_5_2_15: false
+# SSH banners break things
+rhel7cis_rule_5_2_16: false
 rhel7cis_rule_5_3_1: true
 rhel7cis_rule_5_3_2: true
 rhel7cis_rule_5_3_3: true
 rhel7cis_rule_5_3_4: true
-rhel7cis_rule_5_4_1_1: true
+# Passwords should be centralized somewhere if used at all. Password expiration
+# policies can cause unexpected behavior on service accounts, so disabling by
+# default since the check is fairly useless in practice and potentially dangerous.
+rhel7cis_rule_5_4_1_1: false
 rhel7cis_rule_5_4_1_2: true
 rhel7cis_rule_5_4_1_3: true
 rhel7cis_rule_5_4_1_4: true
 rhel7cis_rule_5_4_2: true
 rhel7cis_rule_5_4_3: true
-rhel7cis_rule_5_4_4: true
+# Setting umasks is only really useful on machines with shared users of varying
+# access levels. Most modern servers consist of a single service account with
+# a self-contained application, with the only users accessing for administrative
+# purposes. As a result, this check does nothing and breaks half of the
+# applications ever made because they all have shitty installers that make
+# stupid assumptions.
+rhel7cis_rule_5_4_4: false
+rhel7cis_rule_5_5: true
+# Let's not live in a world where you have to be in wheel to access su. The
+# wheel group usually includes broad access whereas su access can be much more
+# granularly defined via sudo policy.
+rhel7cis_rule_5_6: false
 
 # Section 6 rules
 rhel7cis_rule_6_1_1: true
@@ -247,38 +275,42 @@ rhel7cis_rule_6_2_18: true
 rhel7cis_rule_6_2_19: true
 
 # Service configuration booleans set true to keep service
+# Set various services to true, because if someone took the time
+# to install them on their server, they probably intended it to be there.
+# And if they didn't, just silently turning it off in this role isn't the
+# optimal course of action
 rhel7cis_avahi_server: false
 rhel7cis_cups_server: false
 rhel7cis_dhcp_server: false
 rhel7cis_ldap_server: false
 rhel7cis_telnet_server: false
-rhel7cis_nfs_server: false
+rhel7cis_nfs_server: true
 rhel7cis_rpc_server: false
 rhel7cis_ntalk_server: false
 rhel7cis_rsyncd_server: false
-rhel7cis_tftp_server: false
+rhel7cis_tftp_server: true
 rhel7cis_rsh_server: false
 rhel7cis_nis_server: false
-rhel7cis_snmp_server: false
-rhel7cis_squid_server: false
-rhel7cis_smb_server: false
+rhel7cis_snmp_server: true
+rhel7cis_squid_server: true
+rhel7cis_smb_server: true
 rhel7cis_dovecot_server: false
-rhel7cis_httpd_server: false
-rhel7cis_vsftpd_server: false
-rhel7cis_named_server: false
+rhel7cis_httpd_server: true
+rhel7cis_vsftpd_server: true
+rhel7cis_named_server: true
 rhel7cis_nfs_rpc_server: false
-rhel7cis_is_mail_server: false
-rhel7cis_bind: false
-rhel7cis_vsftpd: false
-rhel7cis_httpd: false
+rhel7cis_is_mail_server: true
+rhel7cis_bind: true
+rhel7cis_vsftpd: true
+rhel7cis_httpd: true
 rhel7cis_dovecot: false
-rhel7cis_samba: false
-rhel7cis_squid: false
-rhel7cis_net_snmp: false
+rhel7cis_samba: true
+rhel7cis_squid: true
+rhel7cis_net_snmp: true
 rhel7cis_allow_autofs: false
 
 # xinetd required
-rhel7cis_xinetd_required: false
+rhel7cis_xinetd_required: true
 
 # RedHat Satellite Subscription items
 rhel7cis_rhnsd_required: false
@@ -313,9 +345,11 @@ rhel7cis_selinux_pol: targeted
 rhel7cis_gui: no
 
 # Set to 'true' if X Windows is needed in your environment
-rhel7cis_xwindows_required: no
+# A lot of things use X-Windows packages, so let's not by default start removing
+# dependencies.
+rhel7cis_xwindows_required: true
 
-rhel7cis_openldap_clients_required: false
+rhel7cis_openldap_clients_required: true
 rhel7cis_telnet_required: false
 rhel7cis_talk_required: false
 rhel7cis_rsh_required: false
@@ -349,7 +383,12 @@ rhel7cis_firewall_services:
 
 # Warning Banner Content (issue, issue.net, motd)
 rhel7cis_warning_banner: |
-    Authorized uses only. All activity may be monitored and reported.
+    WARNING! This system is for the use of authorized users only.
+    By accessing and using the computer system you are consenting
+    to system monitoring, including the  monitoring of keystrokes.
+    Unauthorized use of, or access to,  this computer system may
+    subject you to disciplinary action and criminal prosecution.
+
 # End Banner
 
 ## Section4 vars

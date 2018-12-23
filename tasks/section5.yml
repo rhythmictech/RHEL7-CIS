@@ -575,6 +575,7 @@
 - name: "NOTSCORED | 5.5 | PATCH | Ensure root login is restricted to system console"
   command: /bin/true
   changed_when: no
+  when: rhel7cis_rule_5_5
   tags:
       - level1
       - level2
@@ -588,6 +589,7 @@
       dest: /etc/pam.d/su
       regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
       line: 'auth           required        pam_wheel.so use_uid'
+  when: rhel7cis_rule_5_6
   tags:
       - level1
       - level2
@@ -598,6 +600,7 @@
   user:
       name: root
       groups: wheel
+  when: rhel7cis_rule_5_6
   tags:
       - level1
       - level2
