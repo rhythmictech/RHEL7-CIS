@@ -61,7 +61,6 @@
 - name: "SCORED | 4.1.2 | PATCH | Ensure auditd service is enabled"
   service:
       name: auditd
-      state: started
       enabled: yes
   when:
       - rhel7cis_skip_for_travis == false
